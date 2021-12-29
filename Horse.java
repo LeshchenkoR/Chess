@@ -19,17 +19,23 @@ public class Horse extends ChessPiece {
     @Override
     public boolean canMoveToPosition(ChessBoard chessBoard, int line, int column, int toLine, int toColumn) {
         if (checkPos(toLine) && checkPos(toColumn) && checkPos(line) && checkPos(column)) {
-            if (line == toLine || column == toColumn) return false;
-            if ((toLine - line == 2 && ((toColumn - column == 1) || toColumn - column == -1)) ||
-                    (toLine - line == -2 && ((toColumn - column == 1) || toColumn - column == -1)) ||
-                    (toLine - line == 1 && ((toColumn - column == 2) || toColumn - column == -2)) ||
-                    (toLine - line == -1 && ((toColumn - column == 2) || toColumn - column == -2))) {
-                return true;
-            } else return false;
+            if (line != toLine && column != toColumn &&
+                    (chessBoard.board[toLine][toColumn] == null || !chessBoard.board[toLine][toColumn].color.equals(this.color))
+                    && chessBoard.board[line][column] != null) {
+                if (!chessBoard.board[line][column].equals(this)) {
+                    return false;
+                }
+                int[][] position = new int[][]{
+                        {line - 2, column - 1}, {line - 2, column + 1},
+                        {line + 2, column + 1}, {line + 2, column - 1},
+                        {line - 1, column + 2}, {line + 1, column + 2},
+                        {line + 1, column - 2}, {line - 1, column - 2}};
+                for (int i = 0; i < position.length; i++) {
+                    if (position[i][0] == toLine && position[i][1] == toColumn)
+                        return true;
+                }
+            }
         } else return false;
-    }
-
-    public boolean checkPos(int pos) {
-        return pos >= 0 && pos <= 7;
+        return false;
     }
 }
